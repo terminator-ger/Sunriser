@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Sunriser</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="next_alarm">Next Alarm:</string>
+
+    <!-- Preference Titles -->
+    <string name="connection_header">Connection Settings</string>
+    <string name="color_header">Color Settings</string>
+
+    <!-- Messages Preferences -->
+    <string name="led_address_header">Address of LED light</string>
+    <string name="led_address">led.local</string>
+    <string name="led_port_header">Port</string>
+    <string name="led_port">8080</string>
+
+    <!-- Aid messages -->
+    <string name="desc_disconnect">Dis/-Connect the app from the android alarm clock</string>
+    <string name="desc_toggle">Toggle the led light</string>
+    <string name="desc_sunrise">Set the led sunrise to the natural sunrise time </string>
+    <string name="desc_incr">increase brightness when switched on</string>
+    <string name="desc_decr">decrease brightness when switched on</string>
+</resources>

@@ -1,0 +1,97 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_button"
+    >
+
+    <!-- First row: Label + Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Label: takes 3 parts -->
+        <TextView
+            android:id="@+id/txt_next_alarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:text="@string/next_alarm" />
+
+        <!-- Button: takes 1 part -->
+        <ImageButton
+            android:id="@+id/link_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:contentDescription="@string/desc_disconnect"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/link_intact" />
+    </LinearLayout>
+
+    <!-- Second row: 4 equal buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/toggle_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_toggle"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/icn_on_off_alpha" />
+
+        <ImageButton
+            android:id="@+id/sunrise_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_sunrise"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/icn_sunrise_alpha" />
+
+        <ImageButton
+            android:id="@+id/incr_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_incr"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/icn_brighter_alpha" />
+
+        <ImageButton
+            android:id="@+id/decr_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_decr"
+            android:padding="16dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerInside"
+            style="@android:attr/borderlessButtonStyle"
+            android:background="@drawable/rounded_button"
+            android:src="@drawable/icn_darker_alpha" />
+    </LinearLayout>
+</LinearLayout>
