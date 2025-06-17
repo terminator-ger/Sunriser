@@ -35,7 +35,9 @@ public class Sunriser extends AppWidgetProvider {
     private static long NEXTAlARM_MS = 0;
 
     private static boolean IS_LINKED = true;
-
+    private static boolean IS_TOGGLED = false;
+    private static boolean IS_SUNRISING = false;
+    private static boolean IS_LINKED_ALARM = false;
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
@@ -45,6 +47,21 @@ public class Sunriser extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.decr_button,    getPendingSelfIntent(context, DECRBUTTON     ));
         remoteViews.setOnClickPendingIntent(R.id.sunrise_button, getPendingSelfIntent(context, SUNRISEBUTTON  ));
         remoteViews.setOnClickPendingIntent(R.id.link_button,    getPendingSelfIntent(context, LINKBUTTON     ));
+
+        int sunrise_background = IS_SUNRISING ? R.drawable.rounded_button_green : R.drawable.rounded_button;
+        remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", sunrise_background);
+
+        int toggle_background = IS_TOGGLED ? R.drawable.rounded_button_green : R.drawable.rounded_button;
+        remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", toggle_background);
+
+        if (IS_LINKED && IS_LINKED_ALARM){
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_green);
+        }else if (IS_LINKED) {
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_yellow);
+        } else {
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button);
+        }
+
         Log.i("UpdateAppWidget", "ALARM_TIME: " + ALARM_TIME);
         remoteViews.setTextViewText(R.id.txt_next_alarm, ALARM_TIME);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.txt_next_alarm);
@@ -71,17 +88,6 @@ public class Sunriser extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    public void setAlarmTimeFromAlarmClock(Context context, Intent intent, RESTWakeupInterface apiClient){
-        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        AlarmManager.AlarmClockInfo nextAlarm = alarm.getNextAlarmClock();
-
-        NEXTAlARM_MS = nextAlarm != null ? (nextAlarm.getTriggerTime()) : 0;
-        NEXTAlARM = NEXTAlARM_MS / 1000;
-
-        Call<ResponseBody> resp = apiClient.RestWakeUp(new PostWake(String.valueOf(NEXTAlARM)));
-        send(resp, context, intent);
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -94,6 +100,7 @@ public class Sunriser extends AppWidgetProvider {
 
             if (TOGGLEBUTTON.equals(intent.getAction())) {
                 send(apiClient.RestLightToggle(), context, intent);
+                IS_TOGGLED = ! IS_TOGGLED;
             }
 
             if (INCRBUTTON.equals(intent.getAction())) {
@@ -106,6 +113,7 @@ public class Sunriser extends AppWidgetProvider {
 
             if (SUNRISEBUTTON.equals(intent.getAction())) {
                 send(apiClient.RestSunrise(), context, intent);
+                IS_SUNRISING = !IS_SUNRISING;
             }
 
             if (LINKBUTTON.equals(intent.getAction())) {
@@ -127,20 +135,14 @@ public class Sunriser extends AppWidgetProvider {
             }
 
             if (intent.getAction().equals(ACTION_NEXT_ALARM_CLOCK_CHANGED)) {
+                // update when the clock is changed
                 if (!IS_LINKED){
                     Log.i("onReceive", "ACTION_NEXT_ALARM_CLOCK_CHANGED: NOT LINKED");
                     return;
                 }
                 Log.i("onReceive", "ACTION_NEXT_ALARM_CLOCK_CHANGED");
                 setAlarmTimeFromAlarmClock(context, intent, apiClient);
-                //AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                //AlarmManager.AlarmClockInfo nextAlarm = alarm.getNextAlarmClock();
 
-                //NEXTAlARM_MS = nextAlarm != null ? (nextAlarm.getTriggerTime()) : 0;
-                //NEXTAlARM = NEXTAlARM_MS / 1000;
-
-                //Call<ResponseBody> resp = apiClient.RestWakeUp(new PostWake(String.valueOf(NEXTAlARM)));
-                //send(resp, context, intent);
             }
 
         }
@@ -150,6 +152,10 @@ public class Sunriser extends AppWidgetProvider {
     }
 
     private void update_time(String alarm_time){
+        /*
+            called from onReceive when the clock is changed
+            alarm_time: epoch time in seconds
+         */
         update_time(Long.parseLong(alarm_time));
     }
     private void update_time(long alarm_time){
@@ -160,7 +166,21 @@ public class Sunriser extends AppWidgetProvider {
         NEXTAlARM = alarm_time;
         ALARM_TIME = alarm_time == 0 ? " - " : vv;
         Log.i("update_time: ", "SetALARM " + ALARM_TIME);
+        IS_LINKED_ALARM = false ? alarm_time == 0 : true;
+    }
 
+    public void setAlarmTimeFromAlarmClock(Context context, Intent intent, RESTWakeupInterface apiClient){
+        /*
+            called from onReceive when the clock is changed
+         */
+        AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager.AlarmClockInfo nextAlarm = alarm.getNextAlarmClock();
+
+        NEXTAlARM_MS = nextAlarm != null ? (nextAlarm.getTriggerTime()) : 0;
+        NEXTAlARM = NEXTAlARM_MS / 1000;
+
+        Call<ResponseBody> resp = apiClient.RestWakeUp(new PostWake(String.valueOf(NEXTAlARM)));
+        send(resp, context, intent);
     }
 
     private void send(Call<ResponseBody> resp, Context context, Intent intent){
@@ -170,6 +190,16 @@ public class Sunriser extends AppWidgetProvider {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     String msg = response.body().string();
+                    if(msg.contains("WAKEUP") && response.headers().equals("200") && !msg.contains("WAKEUP 0")) {
+                        IS_LINKED_ALARM = true;
+                    }else{
+                        IS_LINKED_ALARM = false;
+                    }
+                    if(msg.contains("SUNRISE") && response.headers().equals("200") && !msg.contains("SUNRISE 0")){
+                        IS_SUNRISING = true;
+                    }else{
+                        IS_SUNRISING = false;
+                    }
                     if(msg.contains("WAKEUP") || msg.contains("SUNRISE")){
                         update_time(msg.split(" ")[1]);
 
