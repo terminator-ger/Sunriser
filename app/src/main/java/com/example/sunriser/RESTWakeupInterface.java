@@ -25,4 +25,7 @@ public interface RESTWakeupInterface {
     @Headers({"Content-Type: application/json"})
     @PUT("sunrise")
     Call<ResponseBody> RestSunrise();
+    @Headers({"Content-Type: application/josn"})
+    @PUT("status")
+    Call<ResponseBody> RestStatus();
 }

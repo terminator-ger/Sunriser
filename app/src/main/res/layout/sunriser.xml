@@ -55,7 +55,7 @@
             android:src="@drawable/icn_on_off_alpha" />
 
         <ImageButton
-            android:id="@+id/sunrise_button"
+            android:id="@+id/incr_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -68,7 +68,7 @@
             android:src="@drawable/icn_sunrise_alpha" />
 
         <ImageButton
-            android:id="@+id/incr_button"
+            android:id="@+id/decr_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -81,7 +81,7 @@
             android:src="@drawable/icn_brighter_alpha" />
 
         <ImageButton
-            android:id="@+id/decr_button"
+            android:id="@+id/sunrise_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

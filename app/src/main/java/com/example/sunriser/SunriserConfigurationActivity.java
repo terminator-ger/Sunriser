@@ -12,19 +12,29 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.RemoteViews;
+import android.window.OnBackInvokedCallback;
 
 import androidx.core.app.ActivityCompat;
 
 public class SunriserConfigurationActivity extends Activity {
 
     int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    public static String address = "192.168.1.70";
+    public static int port = 8080;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Get widget ID from intent
+        setResult(RESULT_CANCELED);
+        setContentView(R.layout.prefrences);
+        EditText text_field_host = findViewById(R.id.config_host_field);
+        EditText text_field_port = findViewById(R.id.config_port_field);
+        text_field_host.setText(String.valueOf(address));
+        text_field_port.setText(String.valueOf(port));
+
         Intent intent = getIntent();
         Log.d("WIDGET_CONFIG", "Intent: " + intent);
         Log.d("WIDGET_CONFIG", "Extras: " + intent.getExtras());
@@ -38,28 +48,48 @@ public class SunriserConfigurationActivity extends Activity {
             finish(); // No valid widget ID
             return;
         }
-
-        // Example update: Create views and assign button handlers
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.sunriser);
-
-        remoteViews.setOnClickPendingIntent(R.id.toggle_button, getPendingSelfIntent(this, Sunriser.TOGGLEBUTTON));
-        remoteViews.setOnClickPendingIntent(R.id.incr_button, getPendingSelfIntent(this, Sunriser.INCRBUTTON));
-        remoteViews.setOnClickPendingIntent(R.id.decr_button, getPendingSelfIntent(this, Sunriser.DECRBUTTON));
-        remoteViews.setOnClickPendingIntent(R.id.sunrise_button, getPendingSelfIntent(this, Sunriser.SUNRISEBUTTON));
-
-        // Apply update for widget!
-        AppWidgetManager manager = AppWidgetManager.getInstance(this);
-        manager.updateAppWidget(appWidgetId, remoteViews);
-
-
-
-        // Return OK to system
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        setResult(RESULT_OK, resultValue);
-        finish();
+        setResult(RESULT_CANCELED, resultValue);
+
+        // Example update: Create views and assign button handlers
+        RemoteViews widgetView = new RemoteViews(getPackageName(), R.layout.sunriser);
+        //this.update(this);
+
+        // Return OK to system
+        resultValue = new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        getOnBackInvokedDispatcher().registerOnBackInvokedCallback(0,
+                new OnBackInvokedCallback() {
+                    @Override
+                    public void onBackInvoked() {
+                        // update settings
+                        EditText text_field_host = findViewById(R.id.config_host_field);
+                        EditText text_field_port = findViewById(R.id.config_port_field);
+                        address = text_field_host.getText().toString();
+                        port = Integer.valueOf(text_field_port.getText().toString());
+                        finish();
+                    }
+                });
     }
 
+    public void onBack(){
+
+    }
+
+    //public void update(Context context){
+    //    RemoteViews widgetView = new RemoteViews(context.getPackageName(), R.layout.sunriser);
+
+    //    widgetView.setOnClickPendingIntent(R.id.toggle_button, getPendingSelfIntent(this, Sunriser.TOGGLEBUTTON));
+    //    widgetView.setOnClickPendingIntent(R.id.incr_button, getPendingSelfIntent(this, Sunriser.INCRBUTTON));
+    //    widgetView.setOnClickPendingIntent(R.id.decr_button, getPendingSelfIntent(this, Sunriser.DECRBUTTON));
+    //    widgetView.setOnClickPendingIntent(R.id.sunrise_button, getPendingSelfIntent(this, Sunriser.SUNRISEBUTTON));
+
+
+    //    // Apply update for widget!
+    //    AppWidgetManager manager = AppWidgetManager.getInstance(this);
+    //    manager.updateAppWidget(appWidgetId,  widgetView);
+
+    //}
     public String getCurrentSsid(Context context) {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)

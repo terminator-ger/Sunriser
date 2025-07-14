@@ -23,4 +23,6 @@
     <string name="desc_sunrise">Set the led sunrise to the natural sunrise time </string>
     <string name="desc_incr">increase brightness when switched on</string>
     <string name="desc_decr">decrease brightness when switched on</string>
+    <string name="settings_adress">Server Address</string>
+    <string name="settings_address_hint">led.local</string>
 </resources>
