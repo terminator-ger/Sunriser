@@ -9,10 +9,11 @@ import retrofit2.http.Headers;
 /**
  * Created by Michael on 28 Jan 2018.
  */
+
 public interface RESTWakeupInterface {
     @Headers({"Content-Type: application/json"})
     @PUT("wakeuptime")
-    Call<ResponseBody> RestWakeUp(@Body PostWake postWake);
+    Call<ResponseBody> RestWakeUp(@Body Wakeup putWakeup);
     @Headers({"Content-Type: application/json"})
     @PUT("toggle")
     Call<ResponseBody> RestLightToggle();
@@ -25,7 +26,13 @@ public interface RESTWakeupInterface {
     @Headers({"Content-Type: application/json"})
     @PUT("sunrise")
     Call<ResponseBody> RestSunrise();
-    @Headers({"Content-Type: application/josn"})
+    @Headers({"Content-Type: application/json"})
     @PUT("status")
     Call<ResponseBody> RestStatus();
+    @Headers({"Content-Type: application/json"})
+    @PUT("config")
+    Call<ResponseBody> RestReadConfig();
+    @Headers({"Content-Type: application/json"})
+    @PUT("config")
+    Call<ResponseBody> RestWriteConfig(@Body Config putConfig);
 }

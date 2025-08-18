@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.19.1")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.19.1")
     implementation("com.github.skydoves:colorpickerview:2.3.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")

@@ -15,7 +15,6 @@ public class LEDDimmerAPIClient {
 
     public static Retrofit getClient(String BASE_URL) {
         if (retrofit==null || (!(retrofit.baseUrl().toString().equals(BASE_URL)))){
-            Log.i("RetroFit", "new client");
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -23,4 +22,11 @@ public class LEDDimmerAPIClient {
         }
         return retrofit;
     }
+    public static RESTWakeupInterface getRestClient(){
+        String destinationAddress = "http://" + ConfigurationManager.getConfiguration().local.address + ":" + ConfigurationManager.getConfiguration().local.port + "/";
+        Log.i("HOST", destinationAddress);
+        return getClient(destinationAddress).create(RESTWakeupInterface.class);
+    }
+
+
 }

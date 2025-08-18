@@ -2,6 +2,8 @@ package com.example.sunriser;
 
 import static android.app.AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED;
 
+import static com.example.sunriser.LEDDimmerAPIClient.getRestClient;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -53,47 +55,23 @@ public class Sunriser extends AppWidgetProvider {
     private static boolean IS_LINKED_ALARM = false;
 
 
-    void fadeOut(AppWidgetManager appWidgetManager, RemoteViews remoteViews, int[] appWidgetIds, int idx, int maxSteps) {
-        remoteViews.setViewVisibility(R.id.connection_error, View.VISIBLE);
-        remoteViews.setFloat(R.id.connection_error, "setAlpha", (float) (1.0 - (idx * 0.1)));
-        Log.i("fadeOut", String.valueOf(idx));
+    void connection_error(Context context) {
+        Log.i("connection", "error");
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        remoteViews.setInt(R.id.connection_error, "setVisibility", View.VISIBLE);
+        Handler handler = new Handler(Looper.getMainLooper());
+        ComponentName thisWidget = new ComponentName(context, Sunriser.class);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+
         for (int appWidgetId : appWidgetIds) {
-            if (idx == maxSteps - 1) {
-                // Hide the ImageView by setting visibility gone
+            handler.postDelayed(() -> {
                 remoteViews.setViewVisibility(R.id.connection_error, View.INVISIBLE);
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-                return;
-            }
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+            }, 5000);
         }
     }
 
-    void connection_error(Context context) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
-        //remoteViews.setOnClickPendingIntent(R.id.connection_error, getPendingSelfIntent(context, CONNECTIONERROR));
-        remoteViews.setInt(R.id.connection_error, "setVisibility", View.VISIBLE);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName thisWidget = new ComponentName(context, Sunriser.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-
-        Handler handler = new Handler(Looper.getMainLooper());
-        int steps = 10;
-        for (int i = 0; i < steps; i++) {
-            final int stepIdx = i;
-            handler.postDelayed(() -> fadeOut(appWidgetManager, remoteViews, appWidgetIds, stepIdx, steps), steps * 5000); // Adjust timing for fade speed
-        }
-    }
-
-    void changeButton(Context context, AppWidgetManager appWidgetManager, int id, int drawable) {
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
-        ComponentName thisWidget = new ComponentName(context, Sunriser.class);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-        //remoteViews.setOnClickPendingIntent(id,  getPendingSelfIntent(context, button));
-        remoteViews.setInt(id, "setBackgroundResource", drawable);
-        for (int appWidgetId : appWidgetIds) {
-            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
-        }
-    }
 
     void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
@@ -104,25 +82,30 @@ public class Sunriser extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.sunrise_button, getPendingSelfIntent(context, SUNRISEBUTTON));
         remoteViews.setOnClickPendingIntent(R.id.link_button, getPendingSelfIntent(context, LINKBUTTON));
 
-        int sunrise_background = IS_SUNRISING ? R.drawable.rounded_button_green : R.drawable.rounded_button;
-        //remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", sunrise_background);
-        changeButton(context, appWidgetManager, R.id.sunrise_button, sunrise_background);
+        if (IS_SUNRISING){
+            remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", R.drawable.rounded_button_green);
+        }else {
+            remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", R.drawable.rounded_button);
+        }
 
-        int toggle_background = IS_TOGGLED ? R.drawable.rounded_button_green : R.drawable.rounded_button;
-        //remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", toggle_background);
-        changeButton(context, appWidgetManager, R.id.toggle_button, toggle_background);
-        remoteViews.setBoolean(R.id.incr_button, "setEnabled", IS_TOGGLED);
-        remoteViews.setBoolean(R.id.decr_button, "setEnabled", IS_TOGGLED);
+        Log.i("updateAppWidget", "Setting incr/ decr buttons to " + String.valueOf(IS_TOGGLED));
+        if (IS_TOGGLED){
+            remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector_green);
+            remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.button_selector);
+            remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.button_selector);
+        }else{
+            remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector);
+            remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
+            remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
+        }
 
+        Log.i("updateAppWidget", "IS_LINKED " + String.valueOf(IS_LINKED));
         if (IS_LINKED && IS_LINKED_ALARM) {
-            //remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_green);
-            changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button_green);
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector_green);
         } else if (IS_LINKED) {
-            //remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_yellow);
-            changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button_yellow);
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_yellow);
         } else {
-            //remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button);
-            changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button);
+            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector);
         }
         remoteViews.setImageViewResource(R.id.link_button, IS_LINKED ? R.drawable.link_intact : R.drawable.link_broken);
         remoteViews.setTextViewText(R.id.txt_next_alarm, ALARM_TIME);
@@ -132,10 +115,9 @@ public class Sunriser extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
 
+
     public void pollStatus(Context context) {
-        String destinationAddress = "http://" + SunriserConfigurationActivity.address + ":" + SunriserConfigurationActivity.port;
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        RESTWakeupInterface apiClient = LEDDimmerAPIClient.getClient(destinationAddress).create(RESTWakeupInterface.class);
+        RESTWakeupInterface apiClient = getRestClient();
 
         apiClient.RestStatus().enqueue(new Callback<ResponseBody>() {
             @Override
@@ -145,6 +127,8 @@ public class Sunriser extends AppWidgetProvider {
                 try {
                     msg = response.body().string();
                     JSONObject json = new JSONObject(msg.replaceFirst("STATUS ", ""));
+                    //Configuration config = ConfigurationManager.getConfiguration();
+                    //config.readConfigFromJSON(json.toString());
                     Log.i("STATUS", json.toString());
                     if (json.getBoolean("wakeup_task_alive")) {
                         String type = json.getString("wakeup_type");
@@ -172,6 +156,7 @@ public class Sunriser extends AppWidgetProvider {
                     double b_status = json.getJSONArray("rgb_status").getDouble(2);
                     IS_TOGGLED = w_status > 0.0 || r_status > 0.0 || g_status > 0.0 || b_status > 0.0;
                 } catch (Exception e) {
+                    Log.i("Link", e.toString());
                     throw new RuntimeException(e);
                 }
                 forceOnUpdate(context);
@@ -180,7 +165,9 @@ public class Sunriser extends AppWidgetProvider {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 connection_error(context);
-                changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button);
+                //changeButton(context, R.id.link_button, "setActivated", false);
+                IS_LINKED = false;
+                IS_LINKED_ALARM = false;
                 forceOnUpdate(context);
             }
         });
@@ -204,67 +191,68 @@ public class Sunriser extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
+    public void updateConfiguration(){
+        RESTWakeupInterface apiClient = getRestClient();
+    }
+
     public void toggle_action(Context context, AppWidgetManager appWidgetManager, RESTWakeupInterface apiClient) {
-        changeButton(context, appWidgetManager, R.id.toggle_button, R.drawable.rounded_button_yellow);
         apiClient.RestLightToggle().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 assert response.body() != null;
-                String msg = null;
                 try {
-                    msg = response.body().string();
+                    String msg = response.body().string();
+                    Log.i("response", msg.toString());
+                    IS_TOGGLED = msg.startsWith("TOGGLE ON");
+                    forceOnUpdate(context);
                 } catch (IOException e) {
+                    Log.i("response", e.toString());
                     throw new RuntimeException(e);
                 }
-                IS_TOGGLED = msg.startsWith("TOGGLE ON");
-                forceOnUpdate(context);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 connection_error(context);
-                changeButton(context, appWidgetManager, R.id.toggle_button, R.drawable.rounded_button);
+                //changeButton(context, R.id.toggle_button, "isPressed", false);
+                IS_TOGGLED = false;
+                forceOnUpdate(context);
             }
         });
     }
 
     public void incr_action(Context context, AppWidgetManager appWidgetManager, RESTWakeupInterface apiClient) {
-        changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button_yellow);
         apiClient.RestLightIncr().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button_green);
-                changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 connection_error(context);
-                changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button);
             }
         });
     }
 
     public void decr_action(Context context, AppWidgetManager appWidgetManager, RESTWakeupInterface apiClient) {
-        changeButton(context, appWidgetManager, R.id.decr_button, R.drawable.rounded_button_yellow);
+        //changeButton(context, R.id.decr_button, "setPressed", true);
+
         apiClient.RestLightDecr().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button_green);
-                changeButton(context, appWidgetManager, R.id.incr_button, R.drawable.rounded_button);
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 connection_error(context);
-                changeButton(context, appWidgetManager, R.id.decr_button, R.drawable.rounded_button);
             }
         });
     }
 
     public void sunrise_action(Context context, AppWidgetManager appWidgetManager, RESTWakeupInterface apiClient){
         if(IS_LINKED) {
-            changeButton(context, appWidgetManager, R.id.sunrise_button, R.drawable.rounded_button_yellow);
+            //changeButton(context, R.id.sunrise_button, "setPressed", true);
+
             apiClient.RestSunrise().enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -278,11 +266,15 @@ public class Sunriser extends AppWidgetProvider {
                     IS_SUNRISING = String.valueOf(response.code()).equals("200") && !msg.startsWith("SUNRISE 0");
                     Log.i("onResponseTime", msg.split(" ")[1]);
                     update_time(msg.split(" ")[1], context);
+                    forceOnUpdate(context);
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    changeButton(context, appWidgetManager, R.id.sunrise_button, R.drawable.rounded_button);
+                    IS_SUNRISING = false;
+                    connection_error(context);
+                    forceOnUpdate(context);
+                    //changeButton(context, R.id.sunrise_button, "setActivated", false);
                 }
             });
         }
@@ -290,11 +282,9 @@ public class Sunriser extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        String destinationAddress = "http://" + SunriserConfigurationActivity.address + ":" + SunriserConfigurationActivity.port;
-        Log.i("HOST", destinationAddress);
-        RESTWakeupInterface apiClient = LEDDimmerAPIClient.getClient(destinationAddress).create(RESTWakeupInterface.class);
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+       super.onReceive(context, intent);
+       RESTWakeupInterface apiClient = getRestClient();
+       AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         if (TOGGLEBUTTON.equals(intent.getAction())) {
             toggle_action(context, appWidgetManager, apiClient);
             return;
@@ -318,11 +308,10 @@ public class Sunriser extends AppWidgetProvider {
         if (LINKBUTTON.equals(intent.getAction())) {
             IS_LINKED = !IS_LINKED;
             if (IS_LINKED) {
-                setAlarmTimeFromAlarmClock(context, apiClient);
-            } else {
-                update_time(0, context);
+                pollStatus(context);
+            }else {
+                forceOnUpdate(context);
             }
-            pollStatus(context);
             Log.i("onReceive", "LINKBUTTON: " + IS_LINKED);
             return;
         }
@@ -353,7 +342,6 @@ public class Sunriser extends AppWidgetProvider {
         ALARM_TIME = alarm_time == 0 ? " - " : vv;
         Log.i("update_time: ", "SetALARM " + ALARM_TIME);
         IS_LINKED_ALARM = (alarm_time != 0);
-        forceOnUpdate(context);
     }
 
     public void setAlarmTimeFromAlarmClock(Context context, RESTWakeupInterface apiClient){
@@ -361,12 +349,12 @@ public class Sunriser extends AppWidgetProvider {
             called from onReceive when the clock is changed
          */
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button_yellow);
+        //changeButton(context, R.id.link_button, "isPressed", true);
         AlarmManager alarm = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         AlarmManager.AlarmClockInfo nextAlarm = alarm.getNextAlarmClock();
         NEXTAlARM = nextAlarm != null ? (nextAlarm.getTriggerTime() / 1000) : 0;
 
-        Call<ResponseBody> resp = apiClient.RestWakeUp(new PostWake(String.valueOf(NEXTAlARM)));
+        Call<ResponseBody> resp = apiClient.RestWakeUp(Wakeup.createWakeup(String.valueOf(NEXTAlARM)));
         resp.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -376,6 +364,7 @@ public class Sunriser extends AppWidgetProvider {
                     Log.i("onResponseTime", msg.split(" ")[1]);
                     IS_LINKED_ALARM = String.valueOf(response.code()).equals("200") && !msg.startsWith("WAKEUP 0");
                     update_time(msg.split(" ")[1], context);
+                    forceOnUpdate(context);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -385,7 +374,8 @@ public class Sunriser extends AppWidgetProvider {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i("setAlarmTimeFromAlarmClock", t.toString());
                 connection_error(context);
-                changeButton(context, appWidgetManager, R.id.link_button, R.drawable.rounded_button);
+                IS_LINKED_ALARM = false;
+                //changeButton(context, R.id.link_button, "setActivated", false);
                 forceOnUpdate(context);
             }
         });

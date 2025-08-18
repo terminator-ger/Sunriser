@@ -51,6 +51,62 @@
         app:layout_constraintRight_toRightOf="@id/guideline_right"
         />
 
+
+    <TextView
+        android:id="@+id/config_wakeup_len_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_wakeup_len_header"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@id/config_port_field" />
+
+
+    <EditText
+        android:id="@+id/config_wakeup_seq_len"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:focusable="false"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@id/config_wakeup_len_header" />
+
+    <TextView
+        android:id="@+id/config_color_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_color_header"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@id/config_wakeup_seq_len" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/config_color_field"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_editable"
+        app:layout_constraintTop_toBottomOf="@id/config_color_header">
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/color_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/icn_more"
+        app:layout_constraintLeft_toRightOf="@id/config_color_field"
+        app:layout_constraintTop_toTopOf="@id/config_color_field"
+        app:layout_constraintBottom_toBottomOf="@id/config_color_field"
+        />
+
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
         android:layout_width="match_parent"
@@ -58,6 +114,31 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="20dp"
         />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_editable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="80dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_new"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="60dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="40dp"
+        />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_right"
         android:layout_width="match_parent"

@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_disconnect"
             android:scaleType="centerInside"
             android:src="@drawable/link_intact" />
@@ -60,7 +60,7 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_toggle"
             android:scaleType="centerInside"
             android:src="@drawable/icn_on_off_alpha" />
@@ -72,7 +72,7 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_incr"
             android:scaleType="centerInside"
             android:src="@drawable/icn_darker_alpha" />
@@ -84,7 +84,7 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_decr"
             android:scaleType="centerInside"
             android:src="@drawable/icn_brighter_alpha" />
@@ -97,7 +97,7 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@drawable/rounded_button"
+            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_sunrise"
             android:scaleType="centerInside"
             android:src="@drawable/icn_sunrise_alpha" />
