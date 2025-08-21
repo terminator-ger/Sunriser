@@ -28,6 +28,11 @@
     <string name="settings_address_hint">led.local</string>
     <string name="settings_wakeup_len_header">Wakeup sequence length (min)</string>
     <string name="settings_color_header">Color Profile</string>
+    <string name="settings_interpolation_header">Interpolation Profile</string>
     <string name="settings_color_menu_add">Add</string>
     <string name="settings_color_menu_edit">Edit</string>
+    <string name='confirm'>Confirm</string>
+    <string name='cancel'>Cancel</string>
+    <string name="color_profile_name">Enter name of color profile\n</string>
+    <string name="save">save</string>
 </resources>

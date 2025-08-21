@@ -28,6 +28,10 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ColorEdit"
+            android:exported="true">
+        </activity>
 
         <receiver
             android:name=".Sunriser"

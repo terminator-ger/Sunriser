@@ -1,7 +1,6 @@
 package com.example.sunriser;
 
 import static android.app.AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED;
-
 import static com.example.sunriser.LEDDimmerAPIClient.getRestClient;
 
 import android.app.AlarmManager;
@@ -11,26 +10,17 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import org.json.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.text.SimpleDateFormat;
-import java.util.Objects;
 
-import okhttp3.Connection;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,10 +80,12 @@ public class Sunriser extends AppWidgetProvider {
 
         Log.i("updateAppWidget", "Setting incr/ decr buttons to " + String.valueOf(IS_TOGGLED));
         if (IS_TOGGLED){
+            remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_on);
             remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector_green);
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.button_selector);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.button_selector);
         }else{
+            remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_off);
             remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector);
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
@@ -107,7 +99,7 @@ public class Sunriser extends AppWidgetProvider {
         } else {
             remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector);
         }
-        remoteViews.setImageViewResource(R.id.link_button, IS_LINKED ? R.drawable.link_intact : R.drawable.link_broken);
+        remoteViews.setImageViewResource(R.id.link_button, IS_LINKED ? R.drawable.icn_linked : R.drawable.icn_unlinked);
         remoteViews.setTextViewText(R.id.txt_next_alarm, ALARM_TIME);
 
         Log.i("UpdateAppWidget", "ALARM_TIME: " + ALARM_TIME);

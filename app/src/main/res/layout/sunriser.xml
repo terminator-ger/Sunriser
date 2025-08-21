@@ -44,7 +44,7 @@
             android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_disconnect"
             android:scaleType="centerInside"
-            android:src="@drawable/link_intact" />
+            android:src="@drawable/icn_unlinked" />
     </LinearLayout>
 
     <!-- Second row: 4 equal buttons -->
@@ -63,7 +63,7 @@
             android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_toggle"
             android:scaleType="centerInside"
-            android:src="@drawable/icn_on_off_alpha" />
+            android:src="@drawable/icn_off" />
 
         <ImageButton
             android:id="@+id/incr_button"
@@ -75,7 +75,7 @@
             android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_incr"
             android:scaleType="centerInside"
-            android:src="@drawable/icn_darker_alpha" />
+            android:src="@drawable/icn_brighten" />
 
         <ImageButton
             android:id="@+id/decr_button"
@@ -87,7 +87,7 @@
             android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_decr"
             android:scaleType="centerInside"
-            android:src="@drawable/icn_brighter_alpha" />
+            android:src="@drawable/icn_darken" />
 
         <ImageButton
             android:id="@+id/sunrise_button"

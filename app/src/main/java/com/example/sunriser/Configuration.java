@@ -29,7 +29,7 @@ class Presets{
     public int pwm_steps = 300;
 }
 class Local {
-    public String address = "led.local";
+    public String address = "192.168.0.108";
     public int port = 8080;
 }
 @JsonIgnoreProperties(ignoreUnknown = true)

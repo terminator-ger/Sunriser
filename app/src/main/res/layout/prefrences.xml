@@ -90,6 +90,7 @@
         app:layout_constraintRight_toRightOf="@id/guideline_editable"
         app:layout_constraintTop_toBottomOf="@id/config_color_header">
         <AutoCompleteTextView
+            android:id="@+id/config_color_text_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
@@ -98,14 +99,63 @@
 
     <ImageButton
         android:id="@+id/color_more"
+        android:scaleType="centerInside"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:srcCompat="@drawable/icn_more"
         app:layout_constraintLeft_toRightOf="@id/config_color_field"
         app:layout_constraintTop_toTopOf="@id/config_color_field"
         app:layout_constraintBottom_toBottomOf="@id/config_color_field"
         />
 
+    <TextView
+        android:id="@+id/config_interpolation_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_interpolation_header"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintTop_toBottomOf="@id/config_color_field" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/config_interpolation_field"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintRight_toRightOf="@id/guideline_editable"
+        app:layout_constraintTop_toBottomOf="@id/config_interpolation_header">
+        <AutoCompleteTextView
+            android:id="@+id/config_interpolation_text_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/interpolation_more"
+        android:scaleType="centerInside"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/icn_more"
+        app:layout_constraintLeft_toRightOf="@id/config_interpolation_field"
+        app:layout_constraintTop_toTopOf="@id/config_interpolation_field"
+        app:layout_constraintBottom_toBottomOf="@id/config_interpolation_field"
+        />
+
+    <ImageButton
+        android:id="@+id/settings_menu_edit_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:adjustViewBounds="true"
+        android:background="@drawable/rounded_button"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/icn_save" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_left"
