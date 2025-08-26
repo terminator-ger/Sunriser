@@ -35,6 +35,15 @@
             android:src="@drawable/ic_error"
             />
 
+
+    </LinearLayout>
+
+    <!-- Second row: 4 equal buttons -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <ImageButton
             android:id="@+id/link_button"
             android:layout_width="0dp"
@@ -45,13 +54,6 @@
             android:contentDescription="@string/desc_disconnect"
             android:scaleType="centerInside"
             android:src="@drawable/icn_unlinked" />
-    </LinearLayout>
-
-    <!-- Second row: 4 equal buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/toggle_button"

@@ -3,8 +3,9 @@
     <color name="black_alpha_20">#20000000</color>
     <color name="black_alpha_50">#80000000</color>
     <color name="black_alpha_80">#CC000000</color>
-    <color name="md_theme_primary">#88511C</color>
-    <color name="md_theme_primary_50">#8088511C</color>
+    <color name="gray_alpha_50">#80D1D1D1</color>
+    <color name="md_theme_primary">#BFBFBF</color>
+    <color name="md_theme_primary_50">#80BFBFBF</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#FFDCC2</color>
     <color name="md_theme_onPrimaryContainer">#6B3B05</color>

@@ -24,6 +24,7 @@
     <string name="desc_sunrise">Set the led sunrise to the natural sunrise time </string>
     <string name="desc_incr">increase brightness when switched on</string>
     <string name="desc_decr">decrease brightness when switched on</string>
+    <string name="wifi_header">Home Wifi</string>
     <string name="settings_adress">Server Address</string>
     <string name="settings_address_hint">led.local</string>
     <string name="settings_wakeup_len_header">Wakeup sequence length (min)</string>
@@ -34,5 +35,6 @@
     <string name='confirm'>Confirm</string>
     <string name='cancel'>Cancel</string>
     <string name="color_profile_name">Enter name of color profile\n</string>
+    <string name="interpolation_profile_name">Enter name of interpolation profile\n</string>
     <string name="save">save</string>
 </resources>

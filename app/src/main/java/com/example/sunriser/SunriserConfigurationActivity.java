@@ -75,6 +75,21 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
         String json = Configuration.writeConfigToJSON();
         updateRemoteConfig(json);
     }
+
+    private void init_dropdown(int id, String[] options, String active_profile){
+        ArrayAdapter<String> item_adapter = new ArrayAdapter<>(
+                this,
+                R.layout.dropdown_menu_item, // simple dropdown item layout
+                options
+        );
+
+        AutoCompleteTextView autoCompleteTextView = findViewById(id);
+        autoCompleteTextView.setAdapter(item_adapter);
+
+        int itemPosition = item_adapter.getPosition(active_profile);
+        autoCompleteTextView.setText(item_adapter.getItem(itemPosition), false);
+    }
+
     private void init(){
         setContentView(R.layout.prefrences);
         EditText text_field_host = findViewById(R.id.config_host_field);
@@ -83,22 +98,18 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
         TextInputLayout text_color =  findViewById(R.id.config_color_field);
         TextInputLayout text_interpolation =  findViewById(R.id.config_interpolation_field);
         ImageButton color_more = findViewById(R.id.color_more);
+        ImageButton interpolation_more = findViewById(R.id.interpolation_more);
         text_field_host.setText(String.valueOf(ConfigurationManager.getConfiguration().local.address));
         text_field_port.setText(String.valueOf(ConfigurationManager.getConfiguration().local.port));
+        Configuration configuration;
         Presets active_preset;
-        try{
-            active_preset = ConfigurationManager.getConfiguration().getActiveProfile();
-            text_wakeup_len.setText(String.valueOf(active_preset.wakeup_sequence_len));
-            //text_color.getEditText().setText(String.valueOf(active_preset.color));
-            String[] options = ConfigurationManager.getConfiguration().remote.colors.keySet().toArray(new String[0]);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    this,
-                    R.layout.dropdown_menu_item, // simple dropdown item layout
-                    options
-            );
+        try {
+            configuration = ConfigurationManager.getConfiguration();
+            active_preset = configuration.getActiveProfile();
 
-            AutoCompleteTextView autoCompleteTextView = findViewById(R.id.config_color_text_field);
-            autoCompleteTextView.setAdapter(adapter);
+            text_wakeup_len.setText(String.valueOf(active_preset.wakeup_sequence_len));
+            init_dropdown(R.id.config_color_text_field, configuration.remote.colors.keySet().toArray(new String[0]), active_preset.color);
+            init_dropdown(R.id.config_interpolation_text_field, configuration.remote.gradient.keySet().toArray(new String[0]), active_preset.color_interpolation);
 
         } catch (Resources.NotFoundException e){
             text_wakeup_len.setText("-");
@@ -128,12 +139,8 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                 picker.show(getSupportFragmentManager(), "time_picker");
             }
         });
-        color_more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
+
 
         Intent intent = getIntent();
         Log.d("WIDGET_CONFIG", "Intent: " + intent);
@@ -157,23 +164,61 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
             pushConfigToRemote();
         });
 
-        // Return OK to system
-        /*
-        getOnBackInvokedDispatcher().registerOnBackInvokedCallback(0,
-                new OnBackInvokedCallback() {
-                    @Override
-                    public void onBackInvoked() {
-                        // update settings
-                        EditText text_field_host = findViewById(R.id.config_host_field);
-                        EditText text_field_port = findViewById(R.id.config_port_field);
-                        ConfigurationManager.getConfiguration().local.address = text_field_host.getText().toString();
-                        ConfigurationManager.getConfiguration().local.port = Integer.valueOf(text_field_port.getText().toString());
-                        String json = Configuration.writeConfigToJSON();
-                        updateRemoteConfig(json);
-                        finish();
+
+        interpolation_more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Initializing the popup menu and giving the reference as current context
+                PopupMenu popupMenu = new PopupMenu(SunriserConfigurationActivity.this, interpolation_more);
+
+                // Inflating popup menu from popup_menu.xml file
+                popupMenu.getMenuInflater().inflate(R.menu.interpolation_menu, popupMenu.getMenu());
+
+                // Handling menu item click events
+                popupMenu.setOnMenuItemClickListener(menuItem -> {
+                    // Handling menu item click events
+                    int itemId = menuItem.getItemId();
+                    if (itemId == R.id.interpolation_menu_add) {
+                        Intent myIntent = new Intent(SunriserConfigurationActivity.this, InterpolationEdit.class);
+                        myIntent.putExtra("interpolation_name", "");
+                        myIntent.putExtra("interpolation_0_value", "10");
+                        myIntent.putExtra("interpolation_1_value", "20");
+                        myIntent.putExtra("interpolation_2_value", "40");
+                        myIntent.putExtra("interpolation_3_value", "60" );
+                        myIntent.putExtra("interpolation_4_value", "80" );
+                        startActivity(myIntent);
+                        return true;
+                    } else if (itemId == R.id.interpolation_menu_edit) {
+                        // Use SunriserConfigurationActivity.this to refer to the Activity context
+                        Intent myIntent = new Intent(SunriserConfigurationActivity.this, InterpolationEdit.class);
+                        AutoCompleteTextView interpolation_profile = findViewById(R.id.config_interpolation_text_field);
+                        String profile = interpolation_profile.getText().toString();
+                        Log.i("Configuration", profile  + " was selected");
+                        Map<String, List<Float>> gradient = ConfigurationManager.getConfiguration().remote.gradient;
+                        if (!gradient.containsKey(profile)){
+                            Log.i("Configuration", "Profile " + profile + " does not exist");
+                            return false;
+                        }
+                        List<Float> selected_gradient = gradient.get(profile);
+                        myIntent.putExtra("color_name", profile);
+                        if (selected_gradient.size() < 5){
+                            Log.i("Configuration", "Profile " + profile + " has less than 5 values");
+                            return false;
+                        }
+                        myIntent.putExtra("interpolation_0_value", selected_gradient.get(0));
+                        myIntent.putExtra("interpolation_1_value", selected_gradient.get(0));
+                        myIntent.putExtra("interpolation_2_value", selected_gradient.get(0));
+                        myIntent.putExtra("interpolation_3_value", selected_gradient.get(0));
+                        myIntent.putExtra("interpolation_4_value", selected_gradient.get(0));
+
+                        startActivity(myIntent);
+                        return true; // Or false, depending on if you handled the event
                     }
+                    return false;
                 });
-        */
+                popupMenu.show();
+            }
+        });
 
         color_more.setOnClickListener(v -> {
                 // Initializing the popup menu and giving the reference as current context

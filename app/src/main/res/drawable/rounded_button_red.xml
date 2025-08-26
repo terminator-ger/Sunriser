@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/md_theme_primary_50" /> <!-- background color, semi-transparent white -->
-    <corners android:radius="24dp" />   <!-- corner radius -->
+    <corners android:radius="26dp" />   <!-- corner radius -->
     <stroke
         android:width="3dp"
         android:color="#EF9A9A" />  <!-- Red border -->

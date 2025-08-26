@@ -32,6 +32,11 @@
             android:name=".ColorEdit"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".InterpolationEdit"
+            android:exported="true">
+        </activity>
+
 
         <receiver
             android:name=".Sunriser"

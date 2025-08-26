@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColorEdit extends AppCompatActivity {
-    List<Button> buttons = new ArrayList<Button>();
+    List<Button> buttons = new ArrayList<>();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();

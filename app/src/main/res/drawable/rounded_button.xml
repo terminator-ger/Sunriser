@@ -2,7 +2,7 @@
     <item>
         <shape>
             <solid android:color="@color/md_theme_primary_50"/>
-            <corners android:radius="24dp" />   <!-- corner radius -->
+            <corners android:radius="26dp" />   <!-- corner radius -->
         </shape>
     </item>
 </layer-list>

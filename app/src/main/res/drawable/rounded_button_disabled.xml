@@ -2,13 +2,13 @@
     <item>
         <shape>
             <solid android:color="@color/md_theme_primary_50"/>
-            <corners android:radius="24dp" />   <!-- corner radius -->
+            <corners android:radius="26dp" />   <!-- corner radius -->
         </shape>
     </item>
     <item>
         <shape>
-            <solid  android:color="@color/black_alpha_80"/>
-            <corners android:radius="24dp" />   <!-- corner radius -->
+            <solid  android:color="@color/gray_alpha_50"/>
+            <corners android:radius="26dp" />   <!-- corner radius -->
         </shape>
     </item>
 </layer-list>
