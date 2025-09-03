@@ -33,50 +33,68 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/icn_save" />
-    <!-- 5 vertical SeekBars -->
 
-    <SeekBar
+    <!-- 5 vertical SeekBars -->
+    <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_0"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:rotation="270"
-        app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
+        app:layout_constraintBottom_toTopOf="@id/interpolation_menu_edit_button_save"
+        app:layout_constraintEnd_toStartOf="@id/seekBar_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/seekBar_1" />
+        app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name" />
 
-    <SeekBar
+
+
+    <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_1"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:rotation="270"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
         app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name"
+        app:layout_constraintBottom_toTopOf="@id/interpolation_menu_edit_button_save"
         app:layout_constraintStart_toEndOf="@id/seekBar_0"
         app:layout_constraintEnd_toStartOf="@id/seekBar_2" />
 
-    <SeekBar
+
+    <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_2"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:rotation="270"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
         app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name"
+        app:layout_constraintBottom_toTopOf="@id/interpolation_menu_edit_button_save"
         app:layout_constraintStart_toEndOf="@id/seekBar_1"
         app:layout_constraintEnd_toStartOf="@id/seekBar_3" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_3"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:rotation="270"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
         app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name"
+        app:layout_constraintBottom_toTopOf="@id/interpolation_menu_edit_button_save"
         app:layout_constraintStart_toEndOf="@id/seekBar_2"
         app:layout_constraintEnd_toStartOf="@id/seekBar_4" />
 
-    <SeekBar
+    <com.google.android.material.slider.Slider
         android:id="@+id/seekBar_4"
         android:layout_width="0dp"
-        android:layout_height="300dp"
-        android:rotation="270"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:valueFrom="0.0"
+        android:valueTo="100.0"
         app:layout_constraintTop_toBottomOf="@id/interpolation_menu_edit_name"
+        app:layout_constraintBottom_toTopOf="@id/interpolation_menu_edit_button_save"
         app:layout_constraintStart_toEndOf="@id/seekBar_3"
         app:layout_constraintEnd_toEndOf="parent" />
 

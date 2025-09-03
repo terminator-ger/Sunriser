@@ -50,8 +50,8 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_disconnect"
+            android:background="@android:color/transparent"
             android:scaleType="centerInside"
             android:src="@drawable/icn_unlinked" />
 
@@ -62,8 +62,8 @@
             android:layout_margin="8dp"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:background="@drawable/button_selector"
             android:contentDescription="@string/desc_toggle"
+            android:background="@android:color/transparent"
             android:scaleType="centerInside"
             android:src="@drawable/icn_off" />
 
@@ -91,17 +91,5 @@
             android:scaleType="centerInside"
             android:src="@drawable/icn_darken" />
 
-        <ImageButton
-            android:id="@+id/sunrise_button"
-            style="@android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:background="@drawable/button_selector"
-            android:contentDescription="@string/desc_sunrise"
-            android:scaleType="centerInside"
-            android:src="@drawable/icn_sunrise_alpha" />
     </LinearLayout>
 </LinearLayout>

@@ -36,6 +36,7 @@ import retrofit2.Response;
 public class SunriserConfigurationActivity extends AppCompatActivity {
 
     int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    boolean is_connected = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +100,7 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
         TextInputLayout text_interpolation =  findViewById(R.id.config_interpolation_field);
         ImageButton color_more = findViewById(R.id.color_more);
         ImageButton interpolation_more = findViewById(R.id.interpolation_more);
+        ImageButton save = findViewById(R.id.settings_menu_edit_button_save);
         text_field_host.setText(String.valueOf(ConfigurationManager.getConfiguration().local.address));
         text_field_port.setText(String.valueOf(ConfigurationManager.getConfiguration().local.port));
         Configuration configuration;
@@ -110,11 +112,16 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
             text_wakeup_len.setText(String.valueOf(active_preset.wakeup_sequence_len));
             init_dropdown(R.id.config_color_text_field, configuration.remote.colors.keySet().toArray(new String[0]), active_preset.color);
             init_dropdown(R.id.config_interpolation_text_field, configuration.remote.gradient.keySet().toArray(new String[0]), active_preset.color_interpolation);
-
+            save.setEnabled(true);
+            save.setVisibility(ImageButton.VISIBLE);
+            is_connected = true;
         } catch (Resources.NotFoundException e){
             text_wakeup_len.setText("-");
             text_color.getEditText().setText("None");
             text_interpolation.getEditText().setText("None");
+            save.setEnabled(false);
+            is_connected = false;
+            save.setVisibility(ImageButton.INVISIBLE);
         }
 
         text_wakeup_len.setOnClickListener(new View.OnClickListener() {
@@ -159,12 +166,12 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         setResult(RESULT_CANCELED, resultValue);
 
-        ImageButton save = findViewById(R.id.settings_menu_edit_button_save);
         save.setOnClickListener(view -> {
             pushConfigToRemote();
         });
 
 
+        Boolean finalIs_connected = is_connected;
         interpolation_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,11 +188,12 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                     if (itemId == R.id.interpolation_menu_add) {
                         Intent myIntent = new Intent(SunriserConfigurationActivity.this, InterpolationEdit.class);
                         myIntent.putExtra("interpolation_name", "");
-                        myIntent.putExtra("interpolation_0_value", "10");
-                        myIntent.putExtra("interpolation_1_value", "20");
-                        myIntent.putExtra("interpolation_2_value", "40");
-                        myIntent.putExtra("interpolation_3_value", "60" );
-                        myIntent.putExtra("interpolation_4_value", "80" );
+                        myIntent.putExtra("interpolation_0_value", "0.1");
+                        myIntent.putExtra("interpolation_1_value", "0.2");
+                        myIntent.putExtra("interpolation_2_value", "0.4");
+                        myIntent.putExtra("interpolation_3_value", "0.6" );
+                        myIntent.putExtra("interpolation_4_value", "0.8" );
+                        myIntent.putExtra("is_connected", finalIs_connected.toString());
                         startActivity(myIntent);
                         return true;
                     } else if (itemId == R.id.interpolation_menu_edit) {
@@ -200,17 +208,15 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                             return false;
                         }
                         List<Float> selected_gradient = gradient.get(profile);
-                        myIntent.putExtra("color_name", profile);
+                        myIntent.putExtra("interpolation_name", profile);
                         if (selected_gradient.size() < 5){
                             Log.i("Configuration", "Profile " + profile + " has less than 5 values");
                             return false;
                         }
-                        myIntent.putExtra("interpolation_0_value", selected_gradient.get(0));
-                        myIntent.putExtra("interpolation_1_value", selected_gradient.get(0));
-                        myIntent.putExtra("interpolation_2_value", selected_gradient.get(0));
-                        myIntent.putExtra("interpolation_3_value", selected_gradient.get(0));
-                        myIntent.putExtra("interpolation_4_value", selected_gradient.get(0));
+                        for (int i = 0; i < selected_gradient.size(); i++)
+                            myIntent.putExtra("interpolation_"+ i +"_value", selected_gradient.get(i));
 
+                        myIntent.putExtra("is_connected", finalIs_connected.toString());
                         startActivity(myIntent);
                         return true; // Or false, depending on if you handled the event
                     }
@@ -234,13 +240,12 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                         if (itemId == R.id.color_menu_add) {
                             Intent myIntent = new Intent(this, ColorEdit.class);
                             myIntent.putExtra("color_name", "");
-                            myIntent.putExtra("color_menu_edit_button_0_color", "#000000");
-                            myIntent.putExtra("color_menu_edit_button_1_color", "#000000");
-                            myIntent.putExtra("color_menu_edit_button_2_color", "#000000");
-                            myIntent.putExtra("color_menu_edit_button_3_color", "#000000" );
-                            myIntent.putExtra("color_menu_edit_button_4_color", "#000000" );
+                            for (int i = 0; i < 5; i++)
+                                myIntent.putExtra("color_menu_edit_button_" + i + "_color", "#000000");
+                            myIntent.putExtra("is_connected", finalIs_connected.toString());
                             startActivity(myIntent);
                             return true;
+
                         } else if (itemId == R.id.color_menu_edit) {
                             Intent myIntent = new Intent(this, ColorEdit.class);
                             AutoCompleteTextView color_profile = findViewById(R.id.config_color_text_field);
@@ -257,11 +262,10 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                                 Log.i("Configuration", "Profile " + profile + " has less than 5 colors");
                                 return false;
                             }
-                            myIntent.putExtra("color_menu_edit_button_0_color", selected_color.get(0));
-                            myIntent.putExtra("color_menu_edit_button_1_color", selected_color.get(1));
-                            myIntent.putExtra("color_menu_edit_button_2_color", selected_color.get(2));
-                            myIntent.putExtra("color_menu_edit_button_3_color", selected_color.get(3));
-                            myIntent.putExtra("color_menu_edit_button_4_color", selected_color.get(4));
+                            for (int i = 0; i < selected_color.size(); i++)
+                                myIntent.putExtra("color_menu_edit_button_" + i + "_color", selected_color.get(i));
+
+                            myIntent.putExtra("is_connected", finalIs_connected.toString());
                             startActivity(myIntent);
                             // Handle edit action
                             return true;
@@ -281,6 +285,7 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Log.i("updateConfig", "done");
+                init();
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {

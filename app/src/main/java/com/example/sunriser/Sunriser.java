@@ -69,41 +69,33 @@ public class Sunriser extends AppWidgetProvider {
         remoteViews.setOnClickPendingIntent(R.id.toggle_button, getPendingSelfIntent(context, TOGGLEBUTTON));
         remoteViews.setOnClickPendingIntent(R.id.incr_button, getPendingSelfIntent(context, INCRBUTTON));
         remoteViews.setOnClickPendingIntent(R.id.decr_button, getPendingSelfIntent(context, DECRBUTTON));
-        remoteViews.setOnClickPendingIntent(R.id.sunrise_button, getPendingSelfIntent(context, SUNRISEBUTTON));
         remoteViews.setOnClickPendingIntent(R.id.link_button, getPendingSelfIntent(context, LINKBUTTON));
 
-        if (IS_SUNRISING){
-            remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", R.drawable.rounded_button_green);
-        }else {
-            remoteViews.setInt(R.id.sunrise_button, "setBackgroundResource", R.drawable.rounded_button);
-        }
 
         Log.i("updateAppWidget", "Setting incr/ decr buttons to " + String.valueOf(IS_TOGGLED));
         if (IS_TOGGLED){
             remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_on);
-            remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector_green);
+            //remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector_green);
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.button_selector);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.button_selector);
         }else{
             remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_off);
-            remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector);
+            //remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector);
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
         }
 
         Log.i("updateAppWidget", "IS_LINKED " + String.valueOf(IS_LINKED));
-        if (IS_LINKED && IS_LINKED_ALARM) {
-            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector_green);
-        } else if (IS_LINKED) {
-            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_yellow);
-        } else {
-            remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector);
-        }
+        //if (IS_LINKED && IS_LINKED_ALARM) {
+        //    remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector_green);
+        //} else if (IS_LINKED) {
+        //    remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.rounded_button_yellow);
+        //} else {
+        //    remoteViews.setInt(R.id.link_button, "setBackgroundResource", R.drawable.button_selector);
+        //}
         remoteViews.setImageViewResource(R.id.link_button, IS_LINKED ? R.drawable.icn_linked : R.drawable.icn_unlinked);
-        remoteViews.setTextViewText(R.id.txt_next_alarm, ALARM_TIME);
 
         Log.i("UpdateAppWidget", "ALARM_TIME: " + ALARM_TIME);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.txt_next_alarm);
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
 
