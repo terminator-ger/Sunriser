@@ -27,7 +27,19 @@
         android:maxLines="1"
         app:layout_constraintLeft_toLeftOf="@id/guideline_left"
         app:layout_constraintTop_toBottomOf="@id/config_wifi_header"
-        app:layout_constraintRight_toRightOf="@id/guideline_right"
+        app:layout_constraintRight_toRightOf="@id/guideline_editable"
+        />
+
+    <ImageButton
+        android:id="@+id/config_set_wifi"
+        android:scaleType="centerInside"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/icn_wifi_search"
+        app:layout_constraintLeft_toRightOf="@id/config_wifi_field"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right"
+        app:layout_constraintTop_toTopOf="@id/config_wifi_field"
+        app:layout_constraintBottom_toBottomOf="@id/config_wifi_field"
         />
 
     <TextView
@@ -129,6 +141,7 @@
         app:srcCompat="@drawable/icn_more"
         app:layout_constraintLeft_toRightOf="@id/config_color_field"
         app:layout_constraintTop_toTopOf="@id/config_color_field"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right"
         app:layout_constraintBottom_toBottomOf="@id/config_color_field"
         />
 
@@ -165,6 +178,7 @@
         app:srcCompat="@drawable/icn_more"
         app:layout_constraintLeft_toRightOf="@id/config_interpolation_field"
         app:layout_constraintTop_toTopOf="@id/config_interpolation_field"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right"
         app:layout_constraintBottom_toBottomOf="@id/config_interpolation_field"
         />
 

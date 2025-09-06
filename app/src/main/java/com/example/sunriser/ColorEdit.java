@@ -73,7 +73,7 @@ public class ColorEdit extends AppCompatActivity {
         TextInputLayout edit_name = findViewById(R.id.color_menu_edit_name);
         // set default name
         edit_name.getEditText().setText(myIntent.getStringExtra("color_name"));
-        boolean is_connected = myIntent.getBooleanExtra("is_connected", false);
+        boolean is_connected = Boolean.parseBoolean(myIntent.getStringExtra("is_connected"));
         save.setEnabled(is_connected);
         save.setVisibility(is_connected ? ImageButton.VISIBLE : ImageButton.INVISIBLE);
 

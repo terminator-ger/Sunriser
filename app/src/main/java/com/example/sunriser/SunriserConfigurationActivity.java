@@ -4,8 +4,11 @@ import static com.example.sunriser.LEDDimmerAPIClient.getRestClient;
 import static com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK;
 
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -93,6 +96,7 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
 
     private void init(){
         setContentView(R.layout.prefrences);
+        EditText text_field_wifi = findViewById(R.id.config_wifi_field);
         EditText text_field_host = findViewById(R.id.config_host_field);
         EditText text_field_port = findViewById(R.id.config_port_field);
         EditText text_wakeup_len = findViewById(R.id.config_wakeup_seq_len);
@@ -115,6 +119,7 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
             save.setEnabled(true);
             save.setVisibility(ImageButton.VISIBLE);
             is_connected = true;
+
         } catch (Resources.NotFoundException e){
             text_wakeup_len.setText("-");
             text_color.getEditText().setText("None");
@@ -274,6 +279,20 @@ public class SunriserConfigurationActivity extends AppCompatActivity {
                         }
                     });
             popupMenu.show();
+        });
+
+        ImageButton search_wifi = findViewById(R.id.config_set_wifi);
+        search_wifi.setOnClickListener(view -> {
+            WifiManager mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            WifiInfo currentWifi = mainWifi.getConnectionInfo();
+            if(currentWifi != null)
+            {
+                if(currentWifi.getSSID() != null)
+                {
+                    text_field_wifi.setText(currentWifi.getSSID());
+                }
+            }
+
         });
         setResult(RESULT_OK, resultValue);
     }

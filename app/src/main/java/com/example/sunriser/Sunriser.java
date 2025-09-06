@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 
 import org.json.JSONObject;
@@ -49,17 +48,19 @@ public class Sunriser extends AppWidgetProvider {
         Log.i("connection", "error");
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.sunriser);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        remoteViews.setInt(R.id.connection_error, "setVisibility", View.VISIBLE);
+        remoteViews.setImageViewResource(R.id.link_button, R.drawable.icn_linked);
+
         Handler handler = new Handler(Looper.getMainLooper());
         ComponentName thisWidget = new ComponentName(context, Sunriser.class);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-        for (int appWidgetId : appWidgetIds) {
+        /*for (int appWidgetId : appWidgetIds) {
             handler.postDelayed(() -> {
                 remoteViews.setViewVisibility(R.id.connection_error, View.INVISIBLE);
+                remoteViews.setImageViewResource(R.id.link_button, R.drawable.icn_linked);
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
             }, 5000);
-        }
+        }*/
     }
 
 
@@ -75,12 +76,14 @@ public class Sunriser extends AppWidgetProvider {
         Log.i("updateAppWidget", "Setting incr/ decr buttons to " + String.valueOf(IS_TOGGLED));
         if (IS_TOGGLED){
             remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_on);
-            //remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector_green);
+            remoteViews.setImageViewResource(R.id.incr_button, R.drawable.icn_brighten);
+            remoteViews.setImageViewResource(R.id.decr_button, R.drawable.icn_darken);
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.button_selector);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.button_selector);
         }else{
             remoteViews.setImageViewResource(R.id.toggle_button, R.drawable.icn_off);
-            //remoteViews.setInt(R.id.toggle_button, "setBackgroundResource", R.drawable.button_selector);
+            remoteViews.setImageViewResource(R.id.incr_button, R.drawable.icn_brighten_disabled);
+            remoteViews.setImageViewResource(R.id.decr_button, R.drawable.icn_darken_disabled   );
             remoteViews.setInt(R.id.incr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
             remoteViews.setInt(R.id.decr_button, "setBackgroundResource", R.drawable.rounded_button_disabled);
         }
